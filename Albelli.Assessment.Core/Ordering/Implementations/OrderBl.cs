@@ -1,4 +1,5 @@
 ﻿using Albelli.Assessment.Core.Ordering.Interfaces;
+using Albelli.Assessment.Domain.Enums;
 using Albelli.Assessment.Domain.Models;
 using Albelli.Assessment.Infrastructure.Ordering.Interfaces;
 
@@ -10,6 +11,13 @@ namespace Albelli.Assessment.Core.Ordering.Implementations
     /// <seealso cref="IOrderBl" />
     public class OrderBl : IOrderBl
     {
+        private const int PhotoBookWidth = 19;
+        private const int CalendarWidth = 10;
+        private const int CanvasWidth = 16;
+        private const decimal CardsWidth = 4.7m;
+        private const int MugWidth = 94;
+        private const decimal MaxMugStack = 4;
+
         private readonly IOrderDal _orderDal;
 
         public OrderBl(IOrderDal orderDal)
@@ -22,7 +30,7 @@ namespace Albelli.Assessment.Core.Ordering.Implementations
         /// </summary>
         /// <param name="order"><see cref="Order"/> to create.</param>
         /// <returns>RequiredBinWidth</returns>
-        public async Task<int> PlaceOrder(Order order)
+        public async Task<decimal> PlaceOrder(Order order)
         {
             var requiredBinWidth = CalculateRequiredBinWidth(order.Products);
             order.RequiredBinWidth = requiredBinWidth;
@@ -65,10 +73,23 @@ namespace Albelli.Assessment.Core.Ordering.Implementations
         /// </summary>
         /// <param name="products"><see cref="Product"/>s.</param>
         /// <returns>id</returns>
-        private static int CalculateRequiredBinWidth(List<Product>? products)
+        private static decimal CalculateRequiredBinWidth(List<Product>? products)
         {
-            //TODO: remove hardcoded value.
-            return 165;
+            var photoBookQuantity = products.Where(x => x.ProductType == ProductType.PhotoBook).Sum(product => product.Quantity);
+            var calendarQuantity = products.Where(x => x.ProductType == ProductType.Calendar).Sum(product => product.Quantity);
+            var canvasQuantity = products.Where(x => x.ProductType == ProductType.Canvas).Sum(product => product.Quantity);
+            var cardsQuantity = products.Where(x => x.ProductType == ProductType.Cards).Sum(product => product.Quantity);
+            var mugQuantity = products.Where(x => x.ProductType == ProductType.Mug).Sum(product => product.Quantity);
+
+            var photoBookBinWidth = photoBookQuantity * PhotoBookWidth;
+            var calendarBinWidth = calendarQuantity * CalendarWidth;
+            var canvasBinWidth = canvasQuantity * CanvasWidth;
+            var cardsBinWidth = cardsQuantity * CardsWidth;
+            var mugBinWidth = Math.Ceiling(mugQuantity / MaxMugStack) * MugWidth;
+
+            var totalRequiredBinWidth = photoBookBinWidth + calendarBinWidth + canvasBinWidth + cardsBinWidth + mugBinWidth;
+
+            return totalRequiredBinWidth;
         }
     }
 }

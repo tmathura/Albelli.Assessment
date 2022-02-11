@@ -16,7 +16,7 @@ namespace Albelli.Assessment.WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<int> CreateEmployee(OrderRequest orderRequest)
+        public async Task<decimal> CreateEmployee(OrderRequest orderRequest)
         {
             var order = new Order
             {

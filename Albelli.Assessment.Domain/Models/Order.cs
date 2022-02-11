@@ -20,7 +20,7 @@ namespace Albelli.Assessment.Domain.Models
         /// <summary>
         /// The minimum bin width.
         /// </summary>
-        public int RequiredBinWidth { get; set; }
+        public decimal RequiredBinWidth { get; set; }
 
         /// <summary>
         /// The date the order was created.

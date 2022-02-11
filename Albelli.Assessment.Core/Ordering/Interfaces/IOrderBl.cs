@@ -9,7 +9,7 @@ namespace Albelli.Assessment.Core.Ordering.Interfaces
         /// </summary>
         /// <param name="order"><see cref="Order"/> to create.</param>
         /// <returns>RequiredBinWidth</returns>
-        Task<int> PlaceOrder(Order order);
+        Task<decimal> PlaceOrder(Order order);
 
         /// <summary>
         /// Get order by id.
