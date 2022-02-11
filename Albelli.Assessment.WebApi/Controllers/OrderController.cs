@@ -18,7 +18,8 @@ namespace Albelli.Assessment.WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<decimal> CreateEmployee(OrderRequest orderRequest)
+        [Route("")]
+        public async Task<decimal> CreateOrder(OrderRequest orderRequest)
         {
             try
             {
