@@ -10,7 +10,7 @@ namespace Albelli.Assessment.WebApi
     {
         public static void Configure(ContainerBuilder builder)
         {
-            var dbName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RadarrPusherApi.WebApi.SQLite.db3");
+            var dbName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Albelli.Assessment.WebApi.SQLite.db3");
 
             builder.Register(c => new OrderDal(dbName)).As<IOrderDal>().SingleInstance();
             builder.RegisterType<OrderBl>().As<IOrderBl>().SingleInstance();
