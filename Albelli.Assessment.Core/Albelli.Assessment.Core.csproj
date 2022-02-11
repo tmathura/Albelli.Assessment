@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Albelli.Assessment.Domain\Albelli.Assessment.Domain.csproj" />
+    <ProjectReference Include="..\Albelli.Assessment.Infrastructure\Albelli.Assessment.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

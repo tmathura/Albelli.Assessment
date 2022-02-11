@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32126.317
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Albelli.Assessment.WebApi", "Albelli.Assessment.WebApi\Albelli.Assessment.WebApi.csproj", "{CD80360F-BFC8-4ABA-B4B3-BDE423B26A9C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Albelli.Assessment.WebApi", "Albelli.Assessment.WebApi\Albelli.Assessment.WebApi.csproj", "{CD80360F-BFC8-4ABA-B4B3-BDE423B26A9C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Albelli.Assessment.Core", "Albelli.Assessment.Core\Albelli.Assessment.Core.csproj", "{ECA44B4C-1AE2-4582-9115-097FE8BF3E62}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Albelli.Assessment.Domain", "Albelli.Assessment.Domain\Albelli.Assessment.Domain.csproj", "{F2C024E6-EC2D-45DC-9BE0-041566C461AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Albelli.Assessment.Infrastructure", "Albelli.Assessment.Infrastructure\Albelli.Assessment.Infrastructure.csproj", "{73142FCC-E3A9-4326-B297-D46DB2E86F4D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{CD80360F-BFC8-4ABA-B4B3-BDE423B26A9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD80360F-BFC8-4ABA-B4B3-BDE423B26A9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD80360F-BFC8-4ABA-B4B3-BDE423B26A9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECA44B4C-1AE2-4582-9115-097FE8BF3E62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECA44B4C-1AE2-4582-9115-097FE8BF3E62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECA44B4C-1AE2-4582-9115-097FE8BF3E62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECA44B4C-1AE2-4582-9115-097FE8BF3E62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2C024E6-EC2D-45DC-9BE0-041566C461AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2C024E6-EC2D-45DC-9BE0-041566C461AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2C024E6-EC2D-45DC-9BE0-041566C461AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2C024E6-EC2D-45DC-9BE0-041566C461AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73142FCC-E3A9-4326-B297-D46DB2E86F4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73142FCC-E3A9-4326-B297-D46DB2E86F4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73142FCC-E3A9-4326-B297-D46DB2E86F4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73142FCC-E3A9-4326-B297-D46DB2E86F4D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
