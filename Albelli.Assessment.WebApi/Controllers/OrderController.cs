@@ -1,6 +1,8 @@
 using Albelli.Assessment.Core.Ordering.Interfaces;
 using Albelli.Assessment.Domain.Models;
+using Albelli.Assessment.WebApi.Filters;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace Albelli.Assessment.WebApi.Controllers
 {
@@ -18,28 +20,47 @@ namespace Albelli.Assessment.WebApi.Controllers
         [HttpPost]
         public async Task<decimal> CreateEmployee(OrderRequest orderRequest)
         {
-            var order = new Order
+            try
             {
-                Id = orderRequest.Id,
-                Products = orderRequest.Products.Select(productRequest => new Product { ProductType = productRequest.ProductType, Quantity = productRequest.Quantity }).ToList()
-            };
+                var order = new Order
+                {
+                    Id = orderRequest.Id,
+                    Products = orderRequest.Products.Select(productRequest => new Product { ProductType = productRequest.ProductType, Quantity = productRequest.Quantity }).ToList()
+                };
 
-            return await _orderBl.PlaceOrder(order);
+                return await _orderBl.PlaceOrder(order);
+            }
+            catch (Exception exception)
+            {
+                throw new HttpResponseException((int)HttpStatusCode.InternalServerError, exception.Message);
+            }
         }
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<OrderDto> GetOrder(int id)
+        public async Task<OrderDto?> GetOrder(int id)
         {
-            var order = await _orderBl.GetOrder(id);
-            var orderDto = new OrderDto
+            try
             {
-                Id = order.Id,
-                Products = order.Products.Select(productRequest => new ProductDto { ProductType = productRequest.ProductType, Quantity = productRequest.Quantity }).ToList(),
-                RequiredBinWidth = order.RequiredBinWidth
-            };
+                OrderDto? orderDto = null;
+                var order = await _orderBl.GetOrder(id);
 
-            return orderDto;
+                if (order != null)
+                {
+                    orderDto = new OrderDto
+                    {
+                        Id = order.Id,
+                        Products = order.Products.Select(productRequest => new ProductDto { ProductType = productRequest.ProductType, Quantity = productRequest.Quantity }).ToList(),
+                        RequiredBinWidth = order.RequiredBinWidth
+                    };
+                }
+
+                return orderDto;
+            }
+            catch (Exception exception)
+            {
+                throw new HttpResponseException((int)HttpStatusCode.InternalServerError, exception.Message);
+            }
         }
     }
 }

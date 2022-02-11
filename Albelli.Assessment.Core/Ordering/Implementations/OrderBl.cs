@@ -32,6 +32,8 @@ namespace Albelli.Assessment.Core.Ordering.Implementations
         /// <returns>RequiredBinWidth</returns>
         public async Task<decimal> PlaceOrder(Order order)
         {
+            await ValidateNewOrder(order);
+
             var requiredBinWidth = CalculateRequiredBinWidth(order.Products);
             order.RequiredBinWidth = requiredBinWidth;
             
@@ -71,7 +73,7 @@ namespace Albelli.Assessment.Core.Ordering.Implementations
         /// <summary>
         /// Calculate the required bin width.
         /// </summary>
-        /// <param name="products"><see cref="Product"/>s.</param>
+        /// <param name="products"><see cref="Product"/>s to calculate the required bin width.</param>
         /// <returns>id</returns>
         private static decimal CalculateRequiredBinWidth(List<Product>? products)
         {
@@ -90,6 +92,36 @@ namespace Albelli.Assessment.Core.Ordering.Implementations
             var totalRequiredBinWidth = photoBookBinWidth + calendarBinWidth + canvasBinWidth + cardsBinWidth + mugBinWidth;
 
             return totalRequiredBinWidth;
+        }
+
+        /// <summary>
+        /// Validate the new order.
+        /// </summary>
+        /// <param name="order"><see cref="Order"/> to validate.</param>
+        /// <returns>id</returns>
+        private async Task ValidateNewOrder(Order order)
+        {
+            if (order.Id <= 0)
+            {
+                throw new Exception("The order number is invalid, it cannot be 0 or less.");
+            }
+
+            if (order.Products == null || order.Products.Count == 0)
+            {
+                throw new Exception("The order has no products and cannot be added to the system.");
+            }
+
+            if (order.Products.Any(product => product.Quantity == 0))
+            {
+                throw new Exception("The order has products with 0 quantity and cannot be added to the system.");
+            }
+
+            var existingOrder = await GetOrder(order.Id);
+
+            if (existingOrder != null)
+            {
+                throw new Exception("The order number is already in the system.");
+            }
         }
     }
 }

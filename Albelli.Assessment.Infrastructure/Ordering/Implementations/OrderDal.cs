@@ -54,7 +54,10 @@ namespace Albelli.Assessment.Infrastructure.Ordering.Implementations
         /// <param name="order"><see cref="Order"/> to get products.</param>
         public async Task GetProducts(Order order)
         {
-            await _database.GetChildrenAsync(order);
+            if (order != null)
+            {
+                await _database.GetChildrenAsync(order);
+            }
         }
     }
 }

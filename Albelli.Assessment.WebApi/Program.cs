@@ -1,4 +1,5 @@
 using Albelli.Assessment.WebApi;
+using Albelli.Assessment.WebApi.Filters;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 
@@ -16,6 +17,11 @@ builder.Services.AddSwaggerGen();
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
     AutofacConfig.Configure(containerBuilder);
+});
+
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<HttpResponseExceptionFilter>();
 });
 
 var app = builder.Build();
