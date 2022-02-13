@@ -23,7 +23,7 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
         /// <summary>
         /// Create a new order with 1 PhotoBook and validate that the required bin width is 19mm.
         /// </summary>
-        [Fact(Skip = "This test needs to be disabled since the WebApi is not yet deployed for testing and if run it will fail.")]
+        [Fact]
         public async Task CreateOrder()
         {
             // Arrange
@@ -65,7 +65,7 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
         /// <summary>
         /// Create a new order with an invalid order number and validate that the response status code is InternalServerError.
         /// </summary>
-        [Fact(Skip = "This test needs to be disabled since the WebApi is not yet deployed for testing and if run it will fail.")]
+        [Fact]
         public async Task CreateOrder_Invalid_Order_Id()
         {
             // Arrange
@@ -106,7 +106,7 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
         /// <summary>
         /// Create a new order with no products and validate that the response status code is InternalServerError.
         /// </summary>
-        [Fact(Skip = "This test needs to be disabled since the WebApi is not yet deployed for testing and if run it will fail.")]
+        [Fact]
         public async Task CreateOrder_No_Products()
         {
             // Arrange
@@ -137,7 +137,7 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
         /// <summary>
         /// Create a new order that has a product with 0 quantity and validate that the response status code is InternalServerError.
         /// </summary>
-        [Fact(Skip = "This test needs to be disabled since the WebApi is not yet deployed for testing and if run it will fail.")]
+        [Fact]
         public async Task CreateOrder_Products_With_0_Quantity()
         {
             // Arrange
@@ -181,7 +181,7 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
         /// <summary>
         /// Create a new order, then create a with the same order id and validate that the response status code is InternalServerError.
         /// </summary>
-        [Fact(Skip = "This test needs to be disabled since the WebApi is not yet deployed for testing and if run it will fail.")]
+        [Fact]
         public async Task CreateOrder_Duplicate_Order_Id()
         {
             // Arrange
@@ -225,7 +225,7 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
         /// <summary>
         /// Create a new order with 1 PhotoBook and validate that the order can be retrieved via the order id.
         /// </summary>
-        [Fact(Skip = "This test needs to be disabled since the WebApi is not yet deployed for testing and if run it will fail.")]
+        [Fact]
         public async Task GetOrder()
         {
             // Arrange
