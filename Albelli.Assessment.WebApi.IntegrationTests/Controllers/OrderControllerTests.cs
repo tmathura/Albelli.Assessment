@@ -53,7 +53,7 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
             };
 
             // Act
-            response = await _commonHelper.CallEndPoint("order", Method.Post, donationBody, bearer.ToString(), token.ToString());
+            response = await _commonHelper.CallEndPoint("api/order", Method.Post, donationBody, bearer.ToString(), token.ToString());
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             dynamic createOrderResponse = JsonConvert.DeserializeObject(response.Content);
 
@@ -94,7 +94,7 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
             };
             
             // Act
-            response = await _commonHelper.CallEndPoint("order", Method.Post, donationBody, bearer.ToString(), token.ToString());
+            response = await _commonHelper.CallEndPoint("api/order", Method.Post, donationBody, bearer.ToString(), token.ToString());
             Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
             dynamic createOrderResponse = JsonConvert.DeserializeObject(response.Content);
 
@@ -125,7 +125,7 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
             };
 
             // Act
-            response = await _commonHelper.CallEndPoint("order", Method.Post, donationBody, bearer.ToString(), token.ToString());
+            response = await _commonHelper.CallEndPoint("api/order", Method.Post, donationBody, bearer.ToString(), token.ToString());
             Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
             dynamic createOrderResponse = JsonConvert.DeserializeObject(response.Content);
 
@@ -169,7 +169,7 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
             };
 
             // Act
-            response = await _commonHelper.CallEndPoint("order", Method.Post, donationBody, bearer.ToString(), token.ToString());
+            response = await _commonHelper.CallEndPoint("api/order", Method.Post, donationBody, bearer.ToString(), token.ToString());
             Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
             dynamic createOrderResponse = JsonConvert.DeserializeObject(response.Content);
 
@@ -209,11 +209,11 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
                 }
             };
 
-            response = await _commonHelper.CallEndPoint("order", Method.Post, donationBody, bearer.ToString(), token.ToString());
+            response = await _commonHelper.CallEndPoint("api/order", Method.Post, donationBody, bearer.ToString(), token.ToString());
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             // Act
-            response = await _commonHelper.CallEndPoint("order", Method.Post, donationBody, bearer.ToString(), token.ToString());
+            response = await _commonHelper.CallEndPoint("api/order", Method.Post, donationBody, bearer.ToString(), token.ToString());
             Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
             dynamic createOrderResponse = JsonConvert.DeserializeObject(response.Content);
 
@@ -253,7 +253,7 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
                 }
             };
 
-            response = await _commonHelper.CallEndPoint("order", Method.Post, donationBody, bearer.ToString(), token.ToString());
+            response = await _commonHelper.CallEndPoint("api/order", Method.Post, donationBody, bearer.ToString(), token.ToString());
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             // Act

@@ -9,7 +9,7 @@ using System.Net;
 namespace Albelli.Assessment.WebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class OrderController : ControllerBase
     {
         private readonly IOrderBl _orderBl;
