@@ -1,4 +1,4 @@
-name: Build & Test
+name: Build, Test, Publish & Deploy
 
 trigger:
 - main
@@ -13,6 +13,7 @@ variables:
     value: 'Any CPU'
   - name: buildConfiguration
     value: 'Release'
+  - group: WebApi
 
 steps:
 - task: NuGetToolInstaller@1
@@ -41,3 +42,29 @@ steps:
       !**\xunit.runner.visualstudio.testadapter.dll
       !**\xunit.runner.visualstudio.dotnetcore.testadapter.dll
     searchFolder: '$(System.DefaultWorkingDirectory)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish and zip'
+  inputs:
+    command: publish
+    publishWebProjects: false
+    projects: Albelli.Assessment.WebApi\Albelli.Assessment.WebApi.csproj
+    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: true
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+
+- task: AzureRmWebAppDeployment@4
+  displayName: 'Deploy Azure Web App'
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: $(SubscriptionId)
+    appType: 'webApp'
+    WebAppName: $(AppName)
+    deployToSlotOrASE: true
+    ResourceGroupName: $(ResourceGroupName)
+    SlotName: 'production'
+    packageForLinux: '$(Build.ArtifactStagingDirectory)/**/*.zip'
+    enableCustomDeployment: true
+    DeploymentType: 'zipDeploy'
+    JSONFiles: 'appsettings.json'
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
