@@ -80,7 +80,9 @@ steps:
     SlotName: 'production'
     packageForLinux: '$(Build.ArtifactStagingDirectory)/**/*.zip'
     enableCustomDeployment: true
-    DeploymentType: 'zipDeploy'
+    DeploymentType: 'webDeploy'
+    RemoveAdditionalFilesFlag: true
+    ExcludeFilesFromAppDataFlag: false
     JSONFiles: 'appsettings.json'
   condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
 
