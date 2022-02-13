@@ -60,9 +60,6 @@ steps:
     azureSubscription: $(SubscriptionId)
     appType: 'webApp'
     WebAppName: $(AppName)
-    deployToSlotOrASE: true
-    ResourceGroupName: $(ResourceGroupName)
-    SlotName: 'production'
     packageForLinux: '$(Build.ArtifactStagingDirectory)/**/*.zip'
     enableCustomDeployment: true
     DeploymentType: 'zipDeploy'
