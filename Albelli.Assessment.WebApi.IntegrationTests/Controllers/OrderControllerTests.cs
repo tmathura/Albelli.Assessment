@@ -257,7 +257,7 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             // Act
-            response = await _commonHelper.CallEndPoint($"order/{id}", Method.Get, null, bearer.ToString(), token.ToString());
+            response = await _commonHelper.CallEndPoint($"api/order/{id}", Method.Get, null, bearer.ToString(), token.ToString());
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             dynamic getOrderResponse = JsonConvert.DeserializeObject(response.Content);
 
