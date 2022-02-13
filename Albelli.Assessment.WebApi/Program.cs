@@ -66,7 +66,11 @@ log4net.Config.XmlConfigurator.Configure(repository, fileInfo);
 var app = builder.Build();
 
 app.UseSwagger();
-app.UseSwaggerUI(options => options.RoutePrefix = string.Empty);
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "albelli assessment WebApi V1");
+    options.RoutePrefix = string.Empty;
+});
 
 app.UseAuthentication();
 app.UseHttpsRedirection();
