@@ -1,0 +1,43 @@
+name: Build & Test
+
+trigger:
+- main
+
+pool:
+  vmImage: 'windows-2022'
+
+variables:
+  - name: solution
+    value: '**/*.sln'
+  - name: buildPlatform
+    value: 'Any CPU'
+  - name: buildConfiguration
+    value: 'Release'
+
+steps:
+- task: NuGetToolInstaller@1
+  displayName: "Install NuGet"
+
+- task: NuGetCommand@2
+  displayName: "Restore packages"
+  inputs:
+    restoreSolution: '$(solution)'
+
+- task: VSBuild@1
+  displayName: "Build solution"
+  inputs:
+    solution: '$(solution)'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- task: VSTest@2
+  displayName: "Run xUnit tests"
+  inputs:
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: |
+      **\bin\$(BuildConfiguration)\**\*Tests.dll
+      !**\obj\**
+      !**\ref\**
+      !**\xunit.runner.visualstudio.testadapter.dll
+      !**\xunit.runner.visualstudio.dotnetcore.testadapter.dll
+    searchFolder: '$(System.DefaultWorkingDirectory)'
