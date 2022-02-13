@@ -13,6 +13,7 @@ variables:
     value: 'Any CPU'
   - name: buildConfiguration
     value: 'Release'
+  - group: Auth0
   - group: WebApi
 
 steps:
