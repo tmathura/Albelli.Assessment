@@ -58,15 +58,6 @@ steps:
       !**\xunit.runner.visualstudio.dotnetcore.testadapter.dll
     searchFolder: '$(System.DefaultWorkingDirectory)'
 
-- task: AzureAppServiceManage@0
-  displayName: 'Delete slot'
-  inputs:
-    azureSubscription: 'Pay-As-You-Go(6d382b22-a8fe-40f8-aa1b-1db672af4c64)'
-    Action: 'Delete Slot'
-    WebAppName: 'Albelli-Assessment'
-    ResourceGroupName: 'AlbelliAssessmentGroup'
-    Slot: 'production'
-
 - task: DotNetCoreCLI@2
   displayName: 'Publish and zip'
   inputs:
