@@ -65,11 +65,8 @@ log4net.Config.XmlConfigurator.Configure(repository, fileInfo);
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI(options => options.RoutePrefix = string.Empty);
 
 app.UseAuthentication();
 app.UseHttpsRedirection();
