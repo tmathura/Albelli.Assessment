@@ -23,10 +23,21 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
         /// <summary>
         /// Create a new order with 1 PhotoBook and validate that the required bin width is 19mm.
         /// </summary>
-        [Fact(Skip = "This test needs to be disabled since the WebApi is not yet deployed for testing and if run it will fail.")]
+        [Fact]
         public async Task CreateOrder()
         {
             // Arrange
+            var response = await _commonHelper.GetAuth0BearerToken();
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            dynamic tokenResponse = JsonConvert.DeserializeObject(response.Content);
+            Assert.NotNull(tokenResponse);
+
+            var bearer = tokenResponse.token_type;
+            var token = tokenResponse.access_token;
+
+            Assert.NotNull(bearer);
+            Assert.NotNull(token);
+
             var donationBody = new
             {
                 id = 10,
@@ -42,7 +53,7 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
             };
 
             // Act
-            var response = await _commonHelper.CallEndPoint("order", Method.Post, donationBody);
+            response = await _commonHelper.CallEndPoint("order", Method.Post, donationBody, bearer.ToString(), token.ToString());
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             dynamic createOrderResponse = JsonConvert.DeserializeObject(response.Content);
 
@@ -54,10 +65,20 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
         /// <summary>
         /// Create a new order with an invalid order number and validate that the response status code is InternalServerError.
         /// </summary>
-        [Fact(Skip = "This test needs to be disabled since the WebApi is not yet deployed for testing and if run it will fail.")]
+        [Fact]
         public async Task CreateOrder_Invalid_Order_Id()
         {
             // Arrange
+            var response = await _commonHelper.GetAuth0BearerToken();
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            dynamic tokenResponse = JsonConvert.DeserializeObject(response.Content);
+            Assert.NotNull(tokenResponse);
+
+            var bearer = tokenResponse.token_type;
+            var token = tokenResponse.access_token;
+
+            Assert.NotNull(bearer);
+            Assert.NotNull(token);
             var donationBody = new
             {
                 id = 0,
@@ -73,7 +94,7 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
             };
             
             // Act
-            var response = await _commonHelper.CallEndPoint("order", Method.Post, donationBody);
+            response = await _commonHelper.CallEndPoint("order", Method.Post, donationBody, bearer.ToString(), token.ToString());
             Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
             dynamic createOrderResponse = JsonConvert.DeserializeObject(response.Content);
 
@@ -85,10 +106,18 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
         /// <summary>
         /// Create a new order with no products and validate that the response status code is InternalServerError.
         /// </summary>
-        [Fact(Skip = "This test needs to be disabled since the WebApi is not yet deployed for testing and if run it will fail.")]
+        [Fact]
         public async Task CreateOrder_No_Products()
         {
             // Arrange
+            var response = await _commonHelper.GetAuth0BearerToken();
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            dynamic tokenResponse = JsonConvert.DeserializeObject(response.Content);
+            Assert.NotNull(tokenResponse);
+
+            var bearer = tokenResponse.token_type;
+            var token = tokenResponse.access_token;
+
             var donationBody = new
             {
                 id = 0,
@@ -96,7 +125,7 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
             };
 
             // Act
-            var response = await _commonHelper.CallEndPoint("order", Method.Post, donationBody);
+            response = await _commonHelper.CallEndPoint("order", Method.Post, donationBody, bearer.ToString(), token.ToString());
             Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
             dynamic createOrderResponse = JsonConvert.DeserializeObject(response.Content);
 
@@ -108,10 +137,18 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
         /// <summary>
         /// Create a new order that has a product with 0 quantity and validate that the response status code is InternalServerError.
         /// </summary>
-        [Fact(Skip = "This test needs to be disabled since the WebApi is not yet deployed for testing and if run it will fail.")]
+        [Fact]
         public async Task CreateOrder_Products_With_0_Quantity()
         {
             // Arrange
+            var response = await _commonHelper.GetAuth0BearerToken();
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            dynamic tokenResponse = JsonConvert.DeserializeObject(response.Content);
+            Assert.NotNull(tokenResponse);
+
+            var bearer = tokenResponse.token_type;
+            var token = tokenResponse.access_token;
+
             var donationBody = new
             {
                 id = 0,
@@ -132,7 +169,7 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
             };
 
             // Act
-            var response = await _commonHelper.CallEndPoint("order", Method.Post, donationBody);
+            response = await _commonHelper.CallEndPoint("order", Method.Post, donationBody, bearer.ToString(), token.ToString());
             Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
             dynamic createOrderResponse = JsonConvert.DeserializeObject(response.Content);
 
@@ -144,10 +181,18 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
         /// <summary>
         /// Create a new order, then create a with the same order id and validate that the response status code is InternalServerError.
         /// </summary>
-        [Fact(Skip = "This test needs to be disabled since the WebApi is not yet deployed for testing and if run it will fail.")]
+        [Fact]
         public async Task CreateOrder_Duplicate_Order_Id()
         {
             // Arrange
+            var response = await _commonHelper.GetAuth0BearerToken();
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            dynamic tokenResponse = JsonConvert.DeserializeObject(response.Content);
+            Assert.NotNull(tokenResponse);
+
+            var bearer = tokenResponse.token_type;
+            var token = tokenResponse.access_token;
+
             const int id = 20;
 
             var donationBody = new
@@ -164,11 +209,11 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
                 }
             };
 
-            var response = await _commonHelper.CallEndPoint("order", Method.Post, donationBody);
+            response = await _commonHelper.CallEndPoint("order", Method.Post, donationBody, bearer.ToString(), token.ToString());
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             // Act
-            response = await _commonHelper.CallEndPoint("order", Method.Post, donationBody);
+            response = await _commonHelper.CallEndPoint("order", Method.Post, donationBody, bearer.ToString(), token.ToString());
             Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
             dynamic createOrderResponse = JsonConvert.DeserializeObject(response.Content);
 
@@ -180,10 +225,18 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
         /// <summary>
         /// Create a new order with 1 PhotoBook and validate that the order can be retrieved via the order id.
         /// </summary>
-        [Fact(Skip = "This test needs to be disabled since the WebApi is not yet deployed for testing and if run it will fail.")]
+        [Fact]
         public async Task GetOrder()
         {
             // Arrange
+            var response = await _commonHelper.GetAuth0BearerToken();
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            dynamic tokenResponse = JsonConvert.DeserializeObject(response.Content);
+            Assert.NotNull(tokenResponse);
+
+            var bearer = tokenResponse.token_type;
+            var token = tokenResponse.access_token;
+
             const int id = 30;
 
             var donationBody = new
@@ -200,11 +253,11 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
                 }
             };
 
-            var response = await _commonHelper.CallEndPoint("order", Method.Post, donationBody);
+            response = await _commonHelper.CallEndPoint("order", Method.Post, donationBody, bearer.ToString(), token.ToString());
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             // Act
-            response = await _commonHelper.CallEndPoint($"order/{id}", Method.Get, null);
+            response = await _commonHelper.CallEndPoint($"order/{id}", Method.Get, null, bearer.ToString(), token.ToString());
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             dynamic getOrderResponse = JsonConvert.DeserializeObject(response.Content);
 

@@ -2,6 +2,7 @@ using Albelli.Assessment.Core.Ordering.Interfaces;
 using Albelli.Assessment.Domain.Models;
 using Albelli.Assessment.WebApi.Filters;
 using log4net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -21,6 +22,7 @@ namespace Albelli.Assessment.WebApi.Controllers
 
         [HttpPost]
         [Route("")]
+        [Authorize]
         public async Task<decimal> PlaceOrder(OrderRequest orderRequest)
         {
             try
@@ -47,6 +49,7 @@ namespace Albelli.Assessment.WebApi.Controllers
 
         [HttpGet]
         [Route("{id}")]
+        [Authorize]
         public async Task<OrderDto?> GetOrder(int id)
         {
             try
