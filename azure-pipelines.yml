@@ -31,6 +31,20 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
+- task: FileTransform@1
+  displayName: "Transform json for Albelli.Assessment.WebApi"
+  inputs:
+    folderPath: 'Albelli.Assessment.WebApi\bin\$(BuildConfiguration)\net6.0\'
+    fileType: 'json'
+    targetFiles: 'appsettings.json'
+
+- task: FileTransform@1
+  displayName: "Transform json for Albelli.Assessment.WebApi.IntegrationTests"
+  inputs:
+    folderPath: 'Albelli.Assessment.WebApi.IntegrationTests\bin\$(BuildConfiguration)\net6.0\'
+    fileType: 'json'
+    targetFiles: 'appsettings.json'
+
 - task: VSTest@2
   displayName: "Run xUnit tests"
   inputs:
