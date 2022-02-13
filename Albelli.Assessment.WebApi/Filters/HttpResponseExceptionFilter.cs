@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using log4net;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Albelli.Assessment.WebApi.Filters
 {
     public class HttpResponseExceptionFilter : IActionFilter, IOrderedFilter
     {
+        private readonly ILog _logger = LogManager.GetLogger(typeof(HttpResponseExceptionFilter));
+
         public int Order => int.MaxValue - 10;
 
         public void OnActionExecuting(ActionExecutingContext context) { }
@@ -19,6 +22,8 @@ namespace Albelli.Assessment.WebApi.Filters
                 };
 
                 context.ExceptionHandled = true;
+
+                _logger.Error($"Status code {httpResponseException.StatusCode}, {httpResponseException.Value} - {httpResponseException.Message} - {httpResponseException.StackTrace}");
             }
         }
     }

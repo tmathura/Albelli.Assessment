@@ -1,5 +1,6 @@
 ﻿using Albelli.Assessment.Domain.Models;
 using Albelli.Assessment.Infrastructure.Ordering.Interfaces;
+using log4net;
 using SQLite;
 using SQLiteNetExtensionsAsync.Extensions;
 
@@ -12,12 +13,25 @@ namespace Albelli.Assessment.Infrastructure.Ordering.Implementations
     public class OrderDal : IOrderDal
     {
         private readonly SQLiteAsyncConnection _database;
+        private readonly ILog _logger = LogManager.GetLogger(typeof(OrderDal));
 
         public OrderDal(string databasePath)
         {
-            _database = new SQLiteAsyncConnection(databasePath);
-            _database.CreateTableAsync<Order>().Wait();
-            _database.CreateTableAsync<Product>().Wait();
+            try
+            {
+                _logger.Info("Set up database connection.");
+
+                _database = new SQLiteAsyncConnection(databasePath);
+                _database.CreateTableAsync<Order>().Wait();
+                _database.CreateTableAsync<Product>().Wait();
+
+                _logger.Info("Set up database connection completed.");
+            }
+            catch (Exception exception)
+            {
+                _logger.Error($"{exception.Message} - {exception.StackTrace}");
+                throw;
+            }
         }
 
         /// <summary>
@@ -26,7 +40,19 @@ namespace Albelli.Assessment.Infrastructure.Ordering.Implementations
         /// <param name="order"><see cref="Order"/> to create.</param>
         public async Task CreateOrder(Order order)
         {
-            await _database.InsertAsync(order);
+            try
+            {
+                _logger.Info("Insert order into database.");
+
+                await _database.InsertAsync(order);
+
+                _logger.Info("Insert order into database completed.");
+            }
+            catch (Exception exception)
+            {
+                _logger.Error($"{exception.Message} - {exception.StackTrace}");
+                throw;
+            }
         }
         
         /// <summary>
@@ -36,7 +62,20 @@ namespace Albelli.Assessment.Infrastructure.Ordering.Implementations
         /// <returns><see cref="Order"/></returns>
         public async Task<Order> GetOrder(int id)
         {
-            return await _database.Table<Order>().Where(i => i.Id == id).FirstOrDefaultAsync();
+            try
+            {
+                _logger.Info("Get order from database.");
+
+                var order = await _database.Table<Order>().Where(i => i.Id == id).FirstOrDefaultAsync();
+
+                _logger.Info("Get order from database completed.");
+                return order;
+            }
+            catch (Exception exception)
+            {
+                _logger.Error($"{exception.Message} - {exception.StackTrace}");
+                throw;
+            }
         }
 
         /// <summary>
@@ -45,7 +84,19 @@ namespace Albelli.Assessment.Infrastructure.Ordering.Implementations
         /// <param name="products"><see cref="Product"/>s in the order.</param>
         public async Task InsertProducts(List<Product>? products)
         {
-            await _database.InsertAllAsync(products);
+            try
+            {
+                _logger.Info("Insert products into database.");
+
+                await _database.InsertAllAsync(products);
+
+                _logger.Info("Insert products into database completed.");
+            }
+            catch (Exception exception)
+            {
+                _logger.Error($"{exception.Message} - {exception.StackTrace}");
+                throw;
+            }
         }
 
         /// <summary>
@@ -54,9 +105,21 @@ namespace Albelli.Assessment.Infrastructure.Ordering.Implementations
         /// <param name="order"><see cref="Order"/> to get products.</param>
         public async Task GetProducts(Order order)
         {
-            if (order != null)
+            try
             {
-                await _database.GetChildrenAsync(order);
+                if (order != null)
+                {
+                    _logger.Info("Get products from database.");
+
+                    await _database.GetChildrenAsync(order);
+
+                    _logger.Info("Get products from database completed.");
+                }
+            }
+            catch (Exception exception)
+            {
+                _logger.Error($"{exception.Message} - {exception.StackTrace}");
+                throw;
             }
         }
     }

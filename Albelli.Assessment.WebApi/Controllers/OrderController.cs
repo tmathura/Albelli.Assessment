@@ -1,6 +1,7 @@
 using Albelli.Assessment.Core.Ordering.Interfaces;
 using Albelli.Assessment.Domain.Models;
 using Albelli.Assessment.WebApi.Filters;
+using log4net;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -11,6 +12,7 @@ namespace Albelli.Assessment.WebApi.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IOrderBl _orderBl;
+        private readonly ILog _logger = LogManager.GetLogger(typeof(OrderController));
 
         public OrderController(IOrderBl orderBl)
         {
@@ -19,17 +21,23 @@ namespace Albelli.Assessment.WebApi.Controllers
 
         [HttpPost]
         [Route("")]
-        public async Task<decimal> CreateOrder(OrderRequest orderRequest)
+        public async Task<decimal> PlaceOrder(OrderRequest orderRequest)
         {
             try
             {
+                _logger.Info("Start placing order process.");
+
                 var order = new Order
                 {
                     Id = orderRequest.Id,
                     Products = orderRequest.Products.Select(productRequest => new Product { ProductType = productRequest.ProductType, Quantity = productRequest.Quantity }).ToList()
                 };
 
-                return await _orderBl.PlaceOrder(order);
+                var requiredBinWidth = await _orderBl.PlaceOrder(order);
+
+                _logger.Info("Completed placing order process.");
+
+                return requiredBinWidth;
             }
             catch (Exception exception)
             {
@@ -43,6 +51,8 @@ namespace Albelli.Assessment.WebApi.Controllers
         {
             try
             {
+                _logger.Info("Start getting order process.");
+
                 OrderDto? orderDto = null;
                 var order = await _orderBl.GetOrder(id);
 
@@ -55,6 +65,8 @@ namespace Albelli.Assessment.WebApi.Controllers
                         RequiredBinWidth = order.RequiredBinWidth
                     };
                 }
+
+                _logger.Info("Completed getting order process.");
 
                 return orderDto;
             }

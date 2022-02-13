@@ -2,6 +2,7 @@
 using Albelli.Assessment.Domain.Enums;
 using Albelli.Assessment.Domain.Models;
 using Albelli.Assessment.Infrastructure.Ordering.Interfaces;
+using log4net;
 
 namespace Albelli.Assessment.Core.Ordering.Implementations
 {
@@ -19,6 +20,7 @@ namespace Albelli.Assessment.Core.Ordering.Implementations
         private const decimal MaxMugStack = 4;
 
         private readonly IOrderDal _orderDal;
+        private readonly ILog _logger = LogManager.GetLogger(typeof(OrderBl));
 
         public OrderBl(IOrderDal orderDal)
         {
@@ -32,14 +34,26 @@ namespace Albelli.Assessment.Core.Ordering.Implementations
         /// <returns>RequiredBinWidth</returns>
         public async Task<decimal> PlaceOrder(Order order)
         {
-            await ValidateNewOrder(order);
+            try
+            {
+                _logger.Info("Start placing order process.");
 
-            var requiredBinWidth = CalculateRequiredBinWidth(order.Products);
-            order.RequiredBinWidth = requiredBinWidth;
-            
-            await CreateOrder(order);
+                await ValidateNewOrder(order);
 
-            return order.RequiredBinWidth;
+                var requiredBinWidth = CalculateRequiredBinWidth(order.Products);
+                order.RequiredBinWidth = requiredBinWidth;
+
+                await CreateOrder(order);
+
+                _logger.Info("Completed placing order process.");
+
+                return order.RequiredBinWidth;
+            }
+            catch (Exception exception)
+            {
+                _logger.Error($"{exception.Message} - {exception.StackTrace}");
+                throw;
+            }
         }
         
         /// <summary>
@@ -49,11 +63,23 @@ namespace Albelli.Assessment.Core.Ordering.Implementations
         /// <returns><see cref="Order"/></returns>
         public async Task<Order> GetOrder(int id)
         {
-            var order =  await _orderDal.GetOrder(id);
+            try
+            {
+                _logger.Info("Start getting order process.");
 
-            await _orderDal.GetProducts(order);
+                var order = await _orderDal.GetOrder(id);
 
-            return order;
+                await _orderDal.GetProducts(order);
+
+                _logger.Info("Completed getting order process.");
+
+                return order;
+            }
+            catch (Exception exception)
+            {
+                _logger.Error($"{exception.Message} - {exception.StackTrace}");
+                throw;
+            }
         }
 
         /// <summary>

@@ -2,6 +2,7 @@ using Albelli.Assessment.WebApi;
 using Albelli.Assessment.WebApi.Filters;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,11 @@ builder.Services.AddControllers(options =>
 {
     options.Filters.Add<HttpResponseExceptionFilter>();
 });
+
+
+var repository = log4net.LogManager.GetRepository(Assembly.GetEntryAssembly());
+var fileInfo = new FileInfo(@"log4net.config");
+log4net.Config.XmlConfigurator.Configure(repository, fileInfo);
 
 var app = builder.Build();
 
