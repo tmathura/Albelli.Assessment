@@ -1,7 +1,10 @@
+using Albelli.Assessment.Domain.Models;
 using Albelli.Assessment.WebApi.IntegrationTests.Common.Helpers;
 using Newtonsoft.Json;
 using RestSharp;
+using SQLite;
 using System;
+using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using Xunit;
@@ -18,13 +21,29 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
         {
             commonHelper.OutputHelper = outputHelper;
             _commonHelper = commonHelper;
+
+            if (commonHelper.Settings.WebApi.ClearDatabase)
+            {
+                var databasePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Albelli.Assessment.WebApi.SQLite.db3");
+                databasePath = databasePath.Replace("Albelli.Assessment.WebApi.IntegrationTests", "Albelli.Assessment.WebApi");
+
+                if (File.Exists(databasePath))
+                {
+                    var database = new SQLiteAsyncConnection(databasePath);
+
+                    database.DropTableAsync<Order>().Wait();
+                    database.DropTableAsync<Product>().Wait();
+                    database.CreateTableAsync<Order>().Wait();
+                    database.CreateTableAsync<Product>().Wait();
+                }
+            }
         }
 
         /// <summary>
         /// Create a new order with 1 PhotoBook and validate that the required bin width is 19mm.
         /// </summary>
         [Fact]
-        public async Task CreateOrder()
+        public async Task PlaceOrder()
         {
             // Arrange
             var response = await _commonHelper.GetAuth0BearerToken();
@@ -55,18 +74,18 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
             // Act
             response = await _commonHelper.CallEndPoint("api/order", Method.Post, donationBody, bearer.ToString(), token.ToString());
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            dynamic createOrderResponse = JsonConvert.DeserializeObject(response.Content);
+            dynamic placeOrderResponse = JsonConvert.DeserializeObject(response.Content);
 
             // Assert
-            Assert.NotNull(createOrderResponse);
-            Assert.Equal(19, createOrderResponse);
+            Assert.NotNull(placeOrderResponse);
+            Assert.Equal(19, placeOrderResponse);
         }
 
         /// <summary>
         /// Create a new order with an invalid order number and validate that the response status code is InternalServerError.
         /// </summary>
         [Fact]
-        public async Task CreateOrder_Invalid_Order_Id()
+        public async Task PlaceOrder_Invalid_Order_Id()
         {
             // Arrange
             var response = await _commonHelper.GetAuth0BearerToken();
@@ -96,18 +115,18 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
             // Act
             response = await _commonHelper.CallEndPoint("api/order", Method.Post, donationBody, bearer.ToString(), token.ToString());
             Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
-            dynamic createOrderResponse = JsonConvert.DeserializeObject(response.Content);
+            dynamic placeOrderResponse = JsonConvert.DeserializeObject(response.Content);
 
             // Assert
-            Assert.NotNull(createOrderResponse);
-            Assert.Equal("The order number is invalid, it cannot be 0 or less.", createOrderResponse);
+            Assert.NotNull(placeOrderResponse);
+            Assert.Equal("The order number is invalid, it cannot be 0 or less.", placeOrderResponse);
         }
 
         /// <summary>
         /// Create a new order with no products and validate that the response status code is InternalServerError.
         /// </summary>
         [Fact]
-        public async Task CreateOrder_No_Products()
+        public async Task PlaceOrder_No_Products()
         {
             // Arrange
             var response = await _commonHelper.GetAuth0BearerToken();
@@ -127,18 +146,18 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
             // Act
             response = await _commonHelper.CallEndPoint("api/order", Method.Post, donationBody, bearer.ToString(), token.ToString());
             Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
-            dynamic createOrderResponse = JsonConvert.DeserializeObject(response.Content);
+            dynamic placeOrderResponse = JsonConvert.DeserializeObject(response.Content);
 
             // Assert
-            Assert.NotNull(createOrderResponse);
-            Assert.Equal("The order number is invalid, it cannot be 0 or less.", createOrderResponse);
+            Assert.NotNull(placeOrderResponse);
+            Assert.Equal("The order number is invalid, it cannot be 0 or less.", placeOrderResponse);
         }
 
         /// <summary>
         /// Create a new order that has a product with 0 quantity and validate that the response status code is InternalServerError.
         /// </summary>
         [Fact]
-        public async Task CreateOrder_Products_With_0_Quantity()
+        public async Task PlaceOrder_Products_With_0_Quantity()
         {
             // Arrange
             var response = await _commonHelper.GetAuth0BearerToken();
@@ -171,18 +190,18 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
             // Act
             response = await _commonHelper.CallEndPoint("api/order", Method.Post, donationBody, bearer.ToString(), token.ToString());
             Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
-            dynamic createOrderResponse = JsonConvert.DeserializeObject(response.Content);
+            dynamic placeOrderResponse = JsonConvert.DeserializeObject(response.Content);
 
             // Assert
-            Assert.NotNull(createOrderResponse);
-            Assert.Equal("The order number is invalid, it cannot be 0 or less.", createOrderResponse);
+            Assert.NotNull(placeOrderResponse);
+            Assert.Equal("The order number is invalid, it cannot be 0 or less.", placeOrderResponse);
         }
 
         /// <summary>
         /// Create a new order, then create a with the same order id and validate that the response status code is InternalServerError.
         /// </summary>
         [Fact]
-        public async Task CreateOrder_Duplicate_Order_Id()
+        public async Task PlaceOrder_Duplicate_Order_Id()
         {
             // Arrange
             var response = await _commonHelper.GetAuth0BearerToken();
@@ -215,11 +234,11 @@ namespace Albelli.Assessment.WebApi.IntegrationTests.Controllers
             // Act
             response = await _commonHelper.CallEndPoint("api/order", Method.Post, donationBody, bearer.ToString(), token.ToString());
             Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
-            dynamic createOrderResponse = JsonConvert.DeserializeObject(response.Content);
+            dynamic placeOrderResponse = JsonConvert.DeserializeObject(response.Content);
 
             // Assert
-            Assert.NotNull(createOrderResponse);
-            Assert.Equal("The order number is already in the system.", createOrderResponse);
+            Assert.NotNull(placeOrderResponse);
+            Assert.Equal("The order number is already in the system.", placeOrderResponse);
         }
 
         /// <summary>
